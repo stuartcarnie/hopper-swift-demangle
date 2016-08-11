@@ -1,3 +1,3 @@
 protocol InternalDemangler {
-    func demangle(string string: String) -> String?
+    func demangle(string: String) -> String?
 }

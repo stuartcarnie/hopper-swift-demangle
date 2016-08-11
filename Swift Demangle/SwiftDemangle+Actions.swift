@@ -2,27 +2,27 @@ import Demangler
 import Foundation
 
 private enum Action {
-    case DemangleClosest
-    case DemangleAll
+    case demangleClosest
+    case demangleAll
 }
 
 extension SwiftDemangle {
     @objc
     func demangleClosestName() {
-        self.performAction(.DemangleClosest)
+        self.performAction(.demangleClosest)
     }
 
     @objc
     func demangleAllProcedures() {
-        self.performAction(.DemangleAll)
+        self.performAction(.demangleAll)
     }
 
-    private func performAction(action: Action) {
-        let function: HPDocument -> Void
+    private func performAction(_ action: Action) {
+        let function: (HPDocument) -> Void
         switch action {
-        case .DemangleClosest:
+        case .demangleClosest:
             function = self.demangleClosestName
-        case .DemangleAll:
+        case .demangleAll:
             function = self.demangleAllProcedures
         }
 
@@ -37,8 +37,8 @@ extension SwiftDemangle {
 
     private func demangleClosestName(withDocument document: HPDocument) {
         document.wait(withReason: "Demangling Closest Name") { document, file, _ in
-            let address = file.nearestNamedAddressBeforeVirtualAddress(document.currentAddress())
-            let mangledString = file.nameForVirtualAddress(address)
+            let address = file.nearestNamedAddress(beforeVirtualAddress: document.currentAddress())
+            let mangledString = file.name(forVirtualAddress: address)
             let demangleResult = self.demangler.demangle(string: mangledString)
             self.handle(demangleResult: demangleResult, forAddress: address, mangledString: mangledString,
                         file: file, document: document)
@@ -49,12 +49,12 @@ extension SwiftDemangle {
                                mangledString: String?, file: HPDisassembledFile, document: HPDocument)
     {
         switch result {
-        case .Success(let demangledString):
+        case .success(let demangledString):
             file.setName(demangledString, forVirtualAddress: address, reason: .NCReason_Script)
             document.logStringMessage("Demangled '\(mangledString ?? "")' -> '\(demangledString)'")
-        case .Ignored(let ignoredString):
+        case .ignored(let ignoredString):
             document.logStringMessage("Ignoring '\(ignoredString)'")
-        case .Failed(let failedString):
+        case .failed(let failedString):
             document.logStringMessage("Failed to demangle '\(failedString)'")
         }
     }

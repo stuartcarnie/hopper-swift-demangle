@@ -11,7 +11,7 @@ extension HPDocument {
         }
 
         var shouldCancel = false
-        self.beginToWait(reason)
+        self.begin(toWait: reason)
 
 //
 // For some reason passing a cancelBlock crashes 100%. But not if you do it via cycript :/
@@ -23,10 +23,10 @@ extension HPDocument {
 //        })
 //
 
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
             work(document: self, file: file, shouldCancel: &shouldCancel)
 
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.updateStaticNames()
                 self.endWaiting()
             }

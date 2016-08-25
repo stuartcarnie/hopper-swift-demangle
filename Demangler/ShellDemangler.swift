@@ -15,8 +15,8 @@ final class ShellDemangler: InternalDemangler {
 
     private func output(forShellCommand command: String) -> String? {
         assert(command.split().count >= 2)
-
-        let task = Task()
+        
+        let task = Process()
         let pipe = Pipe()
         let components = command.split()
 

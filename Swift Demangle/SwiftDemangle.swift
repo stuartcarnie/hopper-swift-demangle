@@ -38,7 +38,7 @@ final class SwiftDemangle: NSObject, HopperTool {
         return .Plugin_Tool
     }
 
-    func toolMenuDescription() -> [[String: AnyObject]] {
+    func toolMenuDescription() -> [[String: Any]] {
         return [
             [
                 "Title": "Demangle Swift",

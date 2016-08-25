@@ -1,6 +1,6 @@
 extension HPDocument {
-    func wait(withReason reason: String, forWork work: (document: HPDocument, file: HPDisassembledFile,
-        shouldCancel: UnsafeMutablePointer<Bool>) -> Void)
+    func wait(withReason reason: String, forWork work: @escaping (HPDocument, HPDisassembledFile,
+        UnsafeMutablePointer<Bool>) -> Void)
     {
         if self.isWaiting() {
             return self.logErrorStringMessage("Already waiting on something")
@@ -24,7 +24,7 @@ extension HPDocument {
 //
 
         DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-            work(document: self, file: file, shouldCancel: &shouldCancel)
+            work(self, file, &shouldCancel)
 
             DispatchQueue.main.async {
                 self.updateStaticNames()

@@ -10,7 +10,7 @@ private let kDemangleLibraryPath = ("Contents/Developer/Toolchains" +
 private let kBufferSize = 1024
 
 final class LibraryDemangler: InternalDemangler {
-    private var handle: UnsafeMutablePointer<Void> = {
+    private var handle: UnsafeMutableRawPointer = {
         var path = NSString(string: xcodePath).appendingPathComponent(kDemangleLibraryPath)
         if !FileManager.default.fileExists(atPath: path) {
             path = NSString(string: xcodeBetaPath).appendingPathComponent(kDemangleLibraryPath)
